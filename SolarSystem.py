@@ -20,8 +20,8 @@ DARK_BLUE = (0, 0, 139)
 class Planet:
     AU = 149.6e6 * 1000 # Distance in meters from the Earth to the Sun
     G = 6.67428e-11 # Gravitational Constant
-    SCALE = 25 / AU # Defines how many pixels represent an Astronomical Unit
-    TIMESTEP =  3600*24
+    SCALE = 20 / AU # Defines how many pixels represent an Astronomical Unit
+    TIMESTEP =  3600*24*10
     # Change the scale value to make the model smaller or bigger, keeping apropriate proportions
     # Change the timestep to make the model travel faster or slower on time
 
@@ -38,8 +38,22 @@ class Planet:
         self.orbit = []
 
     def draw(self, win):
+        # Places the planets on proper screen coordinates
         x = self.x * self.SCALE + WIDTH / 2
         y = self.y * self.SCALE + HEIGHT / 2
+
+        # Draws the orbits:
+        if len(self.orbit) > 2:
+            updatedPoints = []
+            for point in self.orbit:
+                x, y = point
+                x = x * self.SCALE + WIDTH / 2
+                y = y * self.SCALE + HEIGHT / 2
+                updatedPoints.append((x, y))
+
+            pygame.draw.lines(win, self.color, False, updatedPoints, 2)
+
+        # Draws the planet:
         pygame.draw.circle(win, self.color, (x, y), self.radius)
     
     def attraction(self, other):
