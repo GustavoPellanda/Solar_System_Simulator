@@ -3,7 +3,7 @@ import math
 
 # Pygame presets
 pygame.init()
-WIDTH, HEIGHT = 1720, 880  
+WIDTH, HEIGHT = 1200, 600  
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Planet Simulation")
 
@@ -20,7 +20,7 @@ DARK_BLUE = (0, 0, 139)
 class Planet:
     AU = 149.6e6 * 1000 # Distance in meters from the Earth to the Sun
     G = 6.67428e-11 # Gravitational Constant
-    SCALE = 20 / AU # Defines how many pixels represent an Astronomical Unit
+    SCALE = 17 / AU # Defines how many pixels represent an Astronomical Unit
     TIMESTEP =  3600*24*10
     # Change the scale value to make the model smaller or bigger, keeping apropriate proportions
     # Change the timestep to make the model travel faster or slower on time
@@ -38,11 +38,11 @@ class Planet:
         self.orbit = []
 
     def draw(self, win):
-        # Places the planets on proper screen coordinates
+        # Transforms Astronomical units into screen coordinates
         x = self.x * self.SCALE + WIDTH / 2
         y = self.y * self.SCALE + HEIGHT / 2
 
-        # Draws the orbits:
+        # Draws the orbits over time:
         if len(self.orbit) > 2:
             updatedPoints = []
             for point in self.orbit:
@@ -57,7 +57,7 @@ class Planet:
         pygame.draw.circle(win, self.color, (x, y), self.radius)
     
     def attraction(self, other):
-        # Caclulates the distance between one planet to another:
+        # Caclulates the distance between one planet (self) to another (other):
         other_x, other_y = other.x, other.y
         distance_x = other_x - self.x
         distance_y = other_y - self.y
@@ -77,7 +77,7 @@ class Planet:
         return force_x, force_y
     
     def updatePosition(self, planets):
-        # Total force components
+        # Total force components acting in the current planet
         tForceX = tForceY = 0
         
         # Calculates the gravitational attraction between self and every other planet
@@ -96,7 +96,6 @@ class Planet:
         self.y += self.yVel * self.TIMESTEP
 
         self.orbit.append((self.x, self.y))
-
 
 def main():
     run = True
@@ -124,7 +123,6 @@ def main():
     saturn.yVel = 9.69 * 1000
     uranus.yVel = 6.81 * 1000 
     neptune.yVel = 5.43 * 1000  # m/s
-
 
     planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune]
 
