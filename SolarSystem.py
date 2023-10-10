@@ -21,7 +21,7 @@ class Planet:
     AU = 149.6e6 * 1000 # Distance in meters from the Earth to the Sun
     G = 6.67428e-11 # Gravitational Constant
     SCALE = 17 / AU # Defines how many pixels represent an Astronomical Unit
-    TIMESTEP =  3600*24*10
+    TIMESTEP =  3600*24*10 # A timestep represents the time elapsed in each iteration of the simulation loop
     # Change the scale value to make the model smaller or bigger, keeping apropriate proportions
     # Change the timestep to make the model travel faster or slower on time
     zoom_factor = 1.0  # Initial zoom factor
