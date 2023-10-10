@@ -24,6 +24,9 @@ class Planet:
     TIMESTEP =  3600*24*10
     # Change the scale value to make the model smaller or bigger, keeping apropriate proportions
     # Change the timestep to make the model travel faster or slower on time
+    zoom_factor = 1.0  # Initial zoom factor
+    min_zoom = 0.1    # Minimum zoom level
+    max_zoom = 5.0    # Maximum zoom level
 
     def __init__(self, x, y, radius, mass, color):
         self.x = x
@@ -37,24 +40,27 @@ class Planet:
         self.distanceToSun = 0
         self.orbit = []
 
+    # Draws the orbits:
+    def plotOrbits(self, win):
+        updatedPoints = []
+        for point in self.orbit:
+            x, y = point
+            x = x * self.SCALE * self.zoom_factor + WIDTH / 2
+            y = y * self.SCALE * self.zoom_factor + HEIGHT / 2
+            updatedPoints.append((x, y))
+
+        pygame.draw.lines(win, self.color, False, updatedPoints, 2)
+
     def draw(self, win):
-        # Transforms Astronomical units into screen coordinates
-        x = self.x * self.SCALE + WIDTH / 2
-        y = self.y * self.SCALE + HEIGHT / 2
-
-        # Draws the orbits over time:
-        if len(self.orbit) > 2:
-            updatedPoints = []
-            for point in self.orbit:
-                x, y = point
-                x = x * self.SCALE + WIDTH / 2
-                y = y * self.SCALE + HEIGHT / 2
-                updatedPoints.append((x, y))
-
-            pygame.draw.lines(win, self.color, False, updatedPoints, 2)
+        # Transforms Astronomical Units into screen coordinates
+        x = self.x * self.SCALE * self.zoom_factor + WIDTH / 2
+        y = self.y * self.SCALE * self.zoom_factor + HEIGHT / 2
 
         # Draws the planet:
-        pygame.draw.circle(win, self.color, (x, y), self.radius)
+        pygame.draw.circle(win, self.color, (int(x), int(y)), int(self.radius * self.zoom_factor))
+
+        if len(self.orbit) > 2:
+            self.plotOrbits(win)
     
     def attraction(self, other):
         # Caclulates the distance between one planet (self) to another (other):
@@ -127,12 +133,19 @@ def main():
     planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune]
 
     while run:
-        clock.tick(60) # Limits the loop execution to 60Hz
+        clock.tick(60)  # Limits the loop execution to 60Hz
         WIN.fill((0, 0, 0))
 
-        for event in pygame.event.get(): # Stops while run loop in a quit event
+        for event in pygame.event.get():  # Stops the loop on a quit event
             if event.type == pygame.QUIT:
                 run = False
+
+            # Check for zoom in and zoom out keys
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
+                    Planet.zoom_factor = min(Planet.zoom_factor + 0.1, Planet.max_zoom)
+                elif event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
+                    Planet.zoom_factor = max(Planet.zoom_factor - 0.1, Planet.min_zoom)
 
         for planet in planets:
             planet.updatePosition(planets)
