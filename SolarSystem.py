@@ -21,7 +21,7 @@ class Planet:
     AU = 149.6e6 * 1000 # Distance in meters from the Earth to the Sun
     G = 6.67428e-11 # Gravitational Constant
     SCALE = 25 / AU # Defines how many pixels represent an Astronomical Unit
-    TIMESTEP =  3600*24*5
+    TIMESTEP =  3600*24
     # Change the scale value to make the model smaller or bigger, keeping apropriate proportions
     # Change the timestep to make the model travel faster or slower on time
 
@@ -64,18 +64,18 @@ class Planet:
     
     def updatePosition(self, planets):
         # Total force components
-        total_fx = total_fy = 0
+        tForceX = tForceY = 0
         
+        # Calculates the gravitational attraction between self and every other planet
         for planet in planets:
             if self != planet:
-                # Calculates the gravitational attraction between self and the current planet
                 fx, fy = self.attraction(planet)
-                total_fx += fx
-                total_fy += fy
+                tForceX += fx
+                tForceY += fy
 
         # Updates the velocity components based on the total forces
-        self.xVel += total_fx / self.mass * self.TIMESTEP
-        self.yVel += total_fy / self.mass * self.TIMESTEP
+        self.xVel += tForceX / self.mass * self.TIMESTEP
+        self.yVel += tForceY / self.mass * self.TIMESTEP
 
         # Updates the position of the planet based on the new velocity
         self.x += self.xVel * self.TIMESTEP
