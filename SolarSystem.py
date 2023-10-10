@@ -107,7 +107,7 @@ def main():
     run = True
     clock = pygame.time.Clock()
 
-    # Planet: x, y, radius, mass, color
+    # Planet: x (Astronomical Units), y (Planets will start at 0), radius (m), mass (kg), color
 
     sun = Planet(0, 0, 7.5, 1.98892 * 10**30, YELLOW)
     sun.isSun = True
@@ -121,6 +121,7 @@ def main():
     uranus = Planet(-19.22 * Planet.AU, 0, 3.5, 8.681 * 10**25, LIGHT_BLUE)
     neptune = Planet(-30.05 * Planet.AU, 0, 3.5, 1.02413 * 10**26, DARK_BLUE)
 
+    # Orbital Speeds:
     earth.yVel = 29.783 * 1000
     mars.yVel = 24.077 * 1000
     mercury.yVel = 47.4 * 1000
